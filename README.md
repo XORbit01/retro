@@ -1,19 +1,19 @@
 <div align="center">
 
-![retro_music](https://github.com/Malwarize/retro/assets/130087473/c9824547-9b09-48fc-a113-e1a847793cca)
+![retro_music](https://github.com/XORbit01/retro/assets/130087473/c9824547-9b09-48fc-a113-e1a847793cca)
 
 <h2> play music with command line </h2>
 
-[![GitHub release](https://img.shields.io/github/v/release/Malwarize/retro?color=blue&label=release)]()
-[![GitHub license](https://img.shields.io/github/license/Malwarize/retro?color=green)]()
-[![GitHub issues](https://img.shields.io/github/issues/Malwarize/retro?color=red)]()
-[![GitHub stars](https://img.shields.io/github/stars/Malwarize/retro?color=yellow)]()
-[![GitHub forks](https://img.shields.io/github/forks/Malwarize/retro?color=orange)]()
-[![GitHub watchers](https://img.shields.io/github/watchers/Malwarize/retro?color=blue)]()
+[![GitHub release](https://img.shields.io/github/v/release/XORbit01/retro?color=blue&label=release)]()
+[![GitHub license](https://img.shields.io/github/license/XORbit01/retro?color=green)]()
+[![GitHub issues](https://img.shields.io/github/issues/XORbit01/retro?color=red)]()
+[![GitHub stars](https://img.shields.io/github/stars/XORbit01/retro?color=yellow)]()
+[![GitHub forks](https://img.shields.io/github/forks/XORbit01/retro?color=orange)]()
+[![GitHub watchers](https://img.shields.io/github/watchers/XORbit01/retro?color=blue)]()
 
 play music then continue your work on the terminal.
 
-<img src="https://github.com/Malwarize/retro/assets/130087473/aa91f82c-7faa-4804-b8e6-42b31ce7e6d9" alt="hi" style="width: 500px;" >
+<img src="https://github.com/XORbit01/retro/assets/130087473/aa91f82c-7faa-4804-b8e6-42b31ce7e6d9" alt="hi" style="width: 500px;" >
 </div>
 
 ## 🗺️ map 
@@ -30,7 +30,7 @@ play music then continue your work on the terminal.
 ## 📦 Installation
 $${\color{#AC3097}Install \space \color{#56565E}Retro}$$ 
 ```sh
-wget https://github.com/Malwarize/retro/releases/download/v0.0.45/installer.tar.gz
+wget https://github.com/XORbit01/retro/releases/download/v0.0.45/installer.tar.gz
 tar -xvf installer.tar.gz
 chmod +x installer.sh
 ./installer.sh
@@ -77,7 +77,7 @@ $${\color{#AC3097} Remove \space \color{#56565E}Music from Queue}$$
 ```sh
 retro remove music_name #🗑️
 ```
-*you can remove music from queue by name or index `retro remove 1`*
+you can remove music from queue by name or index `retro remove 1`
 
 $${\color{#AC3097}Adjust \space \color{#56565E}Volume}$$
 ```sh
