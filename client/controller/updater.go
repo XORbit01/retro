@@ -3,14 +3,15 @@ package controller
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/XORbit01/retro/shared"
 	"io"
 	"net/http"
 	"os"
 	"os/exec"
+
+	"github.com/XORbit01/retro/shared"
 )
 
-const ENDPOINT = "https://api.github.com/repos/Malwarize/retro/releases/latest"
+const ENDPOINT = "https://api.github.com/repos/XORbit01/retro/releases/latest"
 
 type Release struct {
 	Version string `json:"tag_name"`
