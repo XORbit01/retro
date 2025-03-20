@@ -2,25 +2,13 @@ package views
 
 import (
 	"fmt"
-	"github.com/XORbit01/retro/shared"
 	"net/rpc"
+
+	"github.com/XORbit01/retro/shared"
 
 	"github.com/XORbit01/retro/client/controller"
 )
 
-//	func CacheDisplay(client *rpc.Client) {
-//		songs := controller.GetCachedMusics(client)
-//		if len(songs) == 0 {
-//			fmt.Println("No music in cache")
-//			return
-//		}
-//		fmt.Println(GetTheme().ProgressStyle.Render("📁 Cache :"))
-//		for _, song := range songs {
-//			fmt.Printf(
-//				"    %s : %s\n", song.Hash[:shared.HashPrefixLength], song.Name,
-//			)
-//		}
-//	}
 func CacheDisplay(client *rpc.Client) {
 	songs := controller.GetCachedMusics(client)
 	if len(songs) == 0 {
@@ -38,7 +26,7 @@ func CacheDisplay(client *rpc.Client) {
 		}
 		fmt.Print(songs[l].Hash[:shared.HashPrefixLength])
 		fmt.Print(GetTheme().ColoredTextStyle.Render("] "))
-		fmt.Println(songs[l].Name)
+		fmt.Print(songs[l].Name)
 	}
 
 }
