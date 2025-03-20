@@ -10,7 +10,7 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 
-	"github.com/Malwarize/retro/shared"
+	"github.com/XORbit01/retro/shared"
 )
 
 type searchResultItem struct {

@@ -2,11 +2,11 @@ package controller
 
 import (
 	"fmt"
-	"github.com/Malwarize/retro/config"
+	"github.com/XORbit01/retro/config"
 	"net/rpc"
 	"os"
 
-	"github.com/Malwarize/retro/shared"
+	"github.com/XORbit01/retro/shared"
 )
 
 func Next(client *rpc.Client) {

@@ -1,4 +1,4 @@
-module github.com/Malwarize/retro
+module github.com/XORbit01/retro
 
 go 1.21.3
 

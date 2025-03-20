@@ -22,7 +22,7 @@ var Activity = client.Activity{
 	Buttons: []*client.Button{
 		{
 			Label: "Download Retro",
-			Url:   "https://github.com/Malwarize/retro",
+			Url:   "https://github.com/XORbit01/retro",
 		},
 	},
 }

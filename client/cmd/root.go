@@ -2,8 +2,8 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/Malwarize/retro/client/controller"
-	"github.com/Malwarize/retro/shared"
+	"github.com/XORbit01/retro/client/controller"
+	"github.com/XORbit01/retro/shared"
 	"github.com/spf13/cobra"
 	"os"
 )

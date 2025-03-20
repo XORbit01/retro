@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/Malwarize/retro/config"
+	"github.com/XORbit01/retro/config"
 )
 
 var (

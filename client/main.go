@@ -1,6 +1,6 @@
 package main
 
-import "github.com/Malwarize/retro/client/cmd"
+import "github.com/XORbit01/retro/client/cmd"
 
 func main() {
 	cmd.Execute()

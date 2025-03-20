@@ -11,9 +11,9 @@ import (
 	"github.com/gopxl/beep"
 	"github.com/gopxl/beep/speaker"
 
-	"github.com/Malwarize/retro/config"
-	"github.com/Malwarize/retro/logger"
-	"github.com/Malwarize/retro/shared"
+	"github.com/XORbit01/retro/config"
+	"github.com/XORbit01/retro/logger"
+	"github.com/XORbit01/retro/shared"
 )
 
 var Instance *Player

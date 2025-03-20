@@ -7,8 +7,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/Malwarize/retro/logger"
-	"github.com/Malwarize/retro/shared"
+	"github.com/XORbit01/retro/logger"
+	"github.com/XORbit01/retro/shared"
 )
 
 func (yt *youtubeEngine) Exists(videoUrl string) (bool, error) {

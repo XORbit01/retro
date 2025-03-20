@@ -12,10 +12,10 @@ import (
 	"github.com/gopxl/beep/mp3"
 	"github.com/gopxl/beep/speaker"
 
-	"github.com/Malwarize/retro/config"
-	"github.com/Malwarize/retro/logger"
-	"github.com/Malwarize/retro/server/player/discord"
-	"github.com/Malwarize/retro/shared"
+	"github.com/XORbit01/retro/config"
+	"github.com/XORbit01/retro/logger"
+	"github.com/XORbit01/retro/server/player/discord"
+	"github.com/XORbit01/retro/shared"
 )
 
 type customReadCloser struct {

@@ -1,6 +1,6 @@
 package player
 
-import "github.com/Malwarize/retro/shared"
+import "github.com/XORbit01/retro/shared"
 
 func (p *Player) addTask(target string, typeTask int) {
 	p.mu.Lock()

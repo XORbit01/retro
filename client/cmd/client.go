@@ -8,9 +8,9 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/Malwarize/retro/client/cmd/views"
-	"github.com/Malwarize/retro/client/controller"
-	"github.com/Malwarize/retro/shared"
+	"github.com/XORbit01/retro/client/cmd/views"
+	"github.com/XORbit01/retro/client/controller"
+	"github.com/XORbit01/retro/shared"
 )
 
 var client, err = controller.GetClient()

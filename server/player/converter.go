@@ -6,8 +6,8 @@ import (
 	"os/exec"
 	"strings"
 
-	"github.com/Malwarize/retro/config"
-	"github.com/Malwarize/retro/logger"
+	"github.com/XORbit01/retro/config"
+	"github.com/XORbit01/retro/logger"
 )
 
 type Converter struct {

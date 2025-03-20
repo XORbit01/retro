@@ -2,10 +2,10 @@ package views
 
 import (
 	"fmt"
-	"github.com/Malwarize/retro/shared"
+	"github.com/XORbit01/retro/shared"
 	"net/rpc"
 
-	"github.com/Malwarize/retro/client/controller"
+	"github.com/XORbit01/retro/client/controller"
 )
 
 //	func CacheDisplay(client *rpc.Client) {

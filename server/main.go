@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/Malwarize/retro/config"
-	"github.com/Malwarize/retro/server/player"
+	"github.com/XORbit01/retro/config"
+	"github.com/XORbit01/retro/server/player"
 )
 
 func main() {

@@ -4,9 +4,9 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/Malwarize/retro/logger"
-	"github.com/Malwarize/retro/server/player/db"
-	"github.com/Malwarize/retro/shared"
+	"github.com/XORbit01/retro/logger"
+	"github.com/XORbit01/retro/server/player/db"
+	"github.com/XORbit01/retro/shared"
 )
 
 type callback func(m db.Music) error

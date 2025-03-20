@@ -9,8 +9,8 @@ import (
 
 	"github.com/charmbracelet/bubbles/progress"
 
-	"github.com/Malwarize/retro/client/controller"
-	"github.com/Malwarize/retro/shared"
+	"github.com/XORbit01/retro/client/controller"
+	"github.com/XORbit01/retro/shared"
 )
 
 func reformatDuration(duration time.Duration) string {

@@ -3,7 +3,7 @@ package controller
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/Malwarize/retro/shared"
+	"github.com/XORbit01/retro/shared"
 	"io"
 	"net/http"
 	"os"
@@ -59,7 +59,7 @@ func Update() error {
 		return fmt.Errorf("⛔ No update available")
 	}
 
-	var DownloadEndpoint = "https://github.com/Malwarize/retro/releases/download/" + newVersion + "/installer.tar.gz"
+	var DownloadEndpoint = "https://github.com/XORbit01/retro/releases/download/" + newVersion + "/installer.tar.gz"
 	fmt.Println("⬇️ Downloading", DownloadEndpoint)
 	req, err := http.Get(DownloadEndpoint)
 	if err != nil {

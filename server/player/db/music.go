@@ -6,7 +6,7 @@ import (
 	"encoding/hex"
 	"fmt"
 
-	"github.com/Malwarize/retro/shared"
+	"github.com/XORbit01/retro/shared"
 	_ "github.com/mattn/go-sqlite3"
 )
 

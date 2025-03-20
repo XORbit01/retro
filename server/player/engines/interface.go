@@ -3,7 +3,7 @@ package engines
 import (
 	"io"
 
-	"github.com/Malwarize/retro/shared"
+	"github.com/XORbit01/retro/shared"
 )
 
 type Engine interface {

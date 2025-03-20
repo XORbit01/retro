@@ -6,8 +6,8 @@ import (
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
 
-	"github.com/Malwarize/retro/client/controller"
-	"github.com/Malwarize/retro/shared"
+	"github.com/XORbit01/retro/client/controller"
+	"github.com/XORbit01/retro/shared"
 )
 
 func addToPlayListCallback(m model) error {

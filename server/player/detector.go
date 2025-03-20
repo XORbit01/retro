@@ -9,10 +9,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Malwarize/retro/config"
-	"github.com/Malwarize/retro/logger"
-	"github.com/Malwarize/retro/server/player/db"
-	"github.com/Malwarize/retro/shared"
+	"github.com/XORbit01/retro/config"
+	"github.com/XORbit01/retro/logger"
+	"github.com/XORbit01/retro/server/player/db"
+	"github.com/XORbit01/retro/shared"
 )
 
 func (p *Player) CheckWhatIsThis(unknown string) DResults {
