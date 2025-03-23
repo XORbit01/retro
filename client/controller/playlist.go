@@ -8,9 +8,10 @@ import (
 	"github.com/XORbit01/retro/shared"
 )
 
-func GetPlayListsNames(client *rpc.Client) []string {
-	var reply []string
-	err := client.Call("Player.RPCPlayListsNames", 0, &reply)
+// TODO:
+func GetPlayListsMeta(client *rpc.Client) []shared.Playlist {
+	var reply []shared.Playlist
+	err := client.Call("Player.RPCPlayListsMeta", 0, &reply)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
@@ -49,10 +50,10 @@ func DetectAndAddToPlayList(
 	return reply, err
 }
 
-func PlayListMusics(name string, client *rpc.Client) []string {
+func GetPlayListMusicsMeta(name string, client *rpc.Client) []shared.MusicMeta {
 	args := name
-	var reply []string
-	err := client.Call("Player.RPCPlayListMusics", args, &reply)
+	var reply []shared.MusicMeta
+	err := client.Call("Player.RPCPlayListMusicsMeta", args, &reply)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
@@ -79,7 +80,7 @@ func PlayListPlayMusic(lname string, indexOrName shared.IntOrString, client *rpc
 		IndexOrName:  indexOrName,
 	}
 	var reply int
-	err := client.Call("Player.RPCPlayListPlayMusic", args, &reply)
+	err := client.Call("Player.RPCPlayListPlayMusicMeta", args, &reply)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)

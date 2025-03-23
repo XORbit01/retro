@@ -134,8 +134,8 @@ func SetTheme(theme string, client *rpc.Client) {
 	}
 }
 
-func GetCachedMusics(client *rpc.Client) []shared.NameHash {
-	var reply []shared.NameHash
+func GetCachedMusics(client *rpc.Client) []shared.HashNamed {
+	var reply []shared.HashNamed
 	err := client.Call("Player.RPCGetCachedMusics", 0, &reply)
 	if err != nil {
 		fmt.Println(err)

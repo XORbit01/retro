@@ -239,28 +239,27 @@ func (d *Db) CleanCache() error {
 	return err
 }
 
-func (d *Db) GetCachedMusics() ([]Music, error) {
+func (d *Db) GetCachedMusics() ([]shared.CacheItem, error) {
 	rows, err := d.db.Query(
-		`select * from music where hash not in (SELECT hash FROM music INNER JOIN music_playlist ON music.name = music_playlist.music_name)`,
+		`SELECT name, hash FROM music
+		 WHERE hash NOT IN (
+			SELECT hash
+			FROM music
+			INNER JOIN music_playlist ON music.name = music_playlist.music_name
+		)`,
 	)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var musics []Music
+
+	var items []shared.CacheItem
 	for rows.Next() {
-		var music Music
-		err := rows.Scan(
-			&music.Name,
-			&music.Source,
-			&music.Key,
-			&music.Data,
-			&music.Hash,
-		)
-		if err != nil {
+		var item shared.CacheItem
+		if err := rows.Scan(&item.Name, &item.Hash); err != nil {
 			return nil, err
 		}
-		musics = append(musics, music)
+		items = append(items, item)
 	}
-	return musics, nil
+	return items, nil
 }

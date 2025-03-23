@@ -28,27 +28,40 @@ func (i searchResultItem) Title() string {
 }
 
 func (i searchResultItem) Description() string {
-	return emojiesType[i.ftype] + " " + i.ftype + " " + i.duration
+	return emojisType[i.ftype] + " " + i.ftype + " " + i.duration
 }
 
 func (i searchResultItem) FilterValue() string { return "" }
+
+type callbackDone struct {
+	err error
+}
+
+func runCallback(m model) tea.Cmd {
+	return func() tea.Msg {
+		err := m.callback(m)
+		m.isProcessing = false
+		return callbackDone{err: err}
+	}
+}
 
 type model struct {
 	client *rpc.Client
 	query  string
 
 	// select callback to be called when a song is selected
-	// func of reciever model
+	// func of receiver model
 	callback func(model) error
 
-	initCmd     tea.Cmd
-	quitMessage func(model) string
-	args        []any
-	selectList  list.Model
-	spin        spinner.Model
-	searchState int
-	quit        bool
-	mu          *sync.Mutex
+	initCmd      tea.Cmd
+	quitMessage  func(model) string
+	args         []any
+	selectList   list.Model
+	spin         spinner.Model
+	searchState  int
+	quit         bool
+	mu           *sync.Mutex
+	isProcessing bool
 }
 
 func (m model) Init() tea.Cmd {
@@ -83,9 +96,15 @@ func (m model) View() string {
 	if m.quit {
 		return m.quitMessage(m)
 	}
+
+	if m.isProcessing {
+		return fmt.Sprintf("%s Playing selected song... please wait", m.spin.View())
+	}
+
 	if m.searchState == shared.Finished {
 		return GetTheme().DocStyle.Render(m.selectList.View())
 	}
+
 	return fmt.Sprintf("%s Searching for %q...", m.spin.View(), m.query)
 }
 
@@ -102,9 +121,8 @@ func selectUpdate(msg tea.Msg, m model) (model, tea.Cmd) {
 			return m, tea.Quit
 		}
 		if msg.String() == "enter" {
-			m.callback(m)
-			m.quit = true
-			return m, tea.Quit
+			m.isProcessing = true
+			return m, runCallback(m)
 		}
 	}
 
@@ -130,6 +148,14 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.selectList = NewList(t.results)
 		m.searchState = shared.Finished
 		return selectUpdate(msg, m)
+
+	case callbackDone:
+		if t.err != nil {
+			// Optionally handle/log error
+			return m, tea.Quit
+		}
+		m.quit = true
+		return m, tea.Quit
 	}
 	if m.searchState == shared.Finished {
 		return selectUpdate(msg, m)

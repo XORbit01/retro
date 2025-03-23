@@ -95,11 +95,11 @@ func (p *Player) RPCDetectAndPlay(query string, reply *[]shared.SearchResult) er
 	return err
 }
 
-func (p *Player) RPCPlayListsNames(_ int, reply *[]string) error {
-	logger.LogInfo("RPCPlayLists called")
+func (p *Player) RPCPlayListsMeta(_ int, reply *[]shared.Playlist) error {
+	logger.LogInfo("RPCPlayListMusics called")
 	var err error
-	*reply, err = p.PlayListsNames()
-	logger.LogInfo("RPCPlayLists done with reply :", *reply)
+	*reply, err = p.PlayListsMeta()
+	logger.LogInfo("RPCPlayListMusics done with reply :", *reply)
 	return err
 }
 
@@ -135,13 +135,13 @@ func (p *Player) RPCDetectAndAddToPlayList(
 	return err
 }
 
-func (p *Player) RPCPlayListMusics(
+func (p *Player) RPCPlayListMusicsMeta(
 	plname string,
-	reply *[]string,
+	reply *[]shared.MusicMeta,
 ) error {
 	logger.LogInfo("RPCPlayListMusics called with name :", plname)
 	var err error
-	*reply, err = p.GetPlayListMusicNames(plname)
+	*reply, err = p.GetPlayListMusicsMeta(plname)
 	logger.LogInfo("RPCPlayListMusics done with reply :", *reply)
 	return err
 }
@@ -218,7 +218,7 @@ func (p *Player) RPCCleanCache(_ int, reply *int) error {
 	return nil
 }
 
-func (p *Player) RPCGetCachedMusics(_ int, reply *[]shared.NameHash) error {
+func (p *Player) RPCGetCachedMusics(_ int, reply *[]shared.HashNamed) error {
 	logger.LogInfo("RPCGetCachedMusics called")
 	var err error
 	*reply, err = p.GetCachedMusics()

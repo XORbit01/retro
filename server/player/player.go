@@ -476,7 +476,7 @@ func (p *Player) RemovePlayList(plname string) error {
 	return nil
 }
 
-func (p *Player) PlayListsNames() ([]string, error) {
+func (p *Player) PlayListsMeta() ([]shared.Playlist, error) {
 	lists, err := p.Director.Db.GetPlaylists()
 	if err != nil {
 		return nil, logger.LogError(
@@ -487,11 +487,7 @@ func (p *Player) PlayListsNames() ([]string, error) {
 		)
 	}
 
-	var names []string
-	for _, list := range lists {
-		names = append(names, list.Name)
-	}
-	return names, nil
+	return lists, nil
 }
 
 func (p *Player) RemoveMusicFromPlayList(plname string, music shared.IntOrString) error {
@@ -550,7 +546,7 @@ func (p *Player) RemoveMusicFromPlayList(plname string, music shared.IntOrString
 	return nil
 }
 
-func (p *Player) GetPlayListMusicNames(plname string) ([]string, error) {
+func (p *Player) GetPlayListMusicsMeta(plname string) ([]shared.MusicMeta, error) {
 	pl, err := p.Director.Db.GetPlaylist(
 		plname,
 	)
@@ -562,7 +558,7 @@ func (p *Player) GetPlayListMusicNames(plname string) ([]string, error) {
 			),
 		)
 	}
-	songs, err := p.Director.Db.GetMusicsFromPlaylist(
+	songs, err := p.Director.Db.GetPlaylistMusicsMeta(
 		pl.Name,
 	)
 	if err != nil {
@@ -573,19 +569,8 @@ func (p *Player) GetPlayListMusicNames(plname string) ([]string, error) {
 			),
 		)
 	}
-	var names []string
-	logger.LogInfo(
-		"Playlist name :",
-		pl.Name,
-	)
-	for _, song := range songs {
-		logger.LogInfo(
-			"Music name :",
-			song.Name,
-		)
-		names = append(names, song.Name)
-	}
-	return names, nil
+
+	return songs, nil
 }
 
 func (p *Player) PlayListPlayMusic(plname string, music shared.IntOrString) error {
@@ -776,9 +761,8 @@ func (p *Player) CleanCache() error {
 	return nil
 }
 
-func (p *Player) GetCachedMusics() ([]shared.NameHash, error) {
+func (p *Player) GetCachedMusics() ([]shared.HashNamed, error) {
 	musics, err := p.Director.Db.GetCachedMusics()
-	var music_names []shared.NameHash
 	if err != nil {
 		return nil, logger.LogError(
 			logger.GError("Failed to get cached musics",
@@ -786,13 +770,7 @@ func (p *Player) GetCachedMusics() ([]shared.NameHash, error) {
 			),
 		)
 	}
-	for _, music := range musics {
-		music_names = append(music_names, shared.NameHash{
-			Name: music.Name,
-			Hash: music.Hash,
-		})
-	}
-	return music_names, nil
+	return musics, nil
 }
 
 func (p *Player) GetPlayerStatus() shared.Status {

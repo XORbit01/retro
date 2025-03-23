@@ -16,7 +16,7 @@ var (
 )
 
 var (
-	DEBUG      = false // set to true for debug mode
+	DEBUG      = true // set to true for debug mode
 	configPath = os.Getenv("HOME") + "/.retro/config.json"
 )
 

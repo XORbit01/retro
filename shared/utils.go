@@ -124,7 +124,12 @@ type IntOrString struct {
 	IsInt  bool
 }
 
-type NameHash struct {
+type HashNamed struct {
 	Name string
 	Hash string
 }
+
+type Playlist = HashNamed
+type MusicMeta = HashNamed
+type CacheItem = HashNamed
+

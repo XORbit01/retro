@@ -20,7 +20,7 @@ func init() {
 		os.O_CREATE|os.O_APPEND|os.O_WRONLY,
 		0o666,
 	)
-	if err != nil && !os.IsNotExist(err) {
+	if err != nil && os.IsNotExist(err) || config.DEBUG == true {
 		logFile = os.Stdout
 	}
 	INFOLogger = log.New(

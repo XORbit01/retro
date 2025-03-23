@@ -1,16 +1,16 @@
 package db
 
 import (
+	"crypto/md5"
+	"encoding/hex"
 	"fmt"
 	"strings"
+
+	"github.com/XORbit01/retro/shared"
 )
 
-type Playlist struct {
-	Name string
-}
-
-func (d *Db) GetPlaylist(name string) (Playlist, error) {
-	var playlist Playlist
+func (d *Db) GetPlaylist(name string) (shared.Playlist, error) {
+	var playlist shared.Playlist
 	err := d.db.QueryRow(
 		`SELECT name FROM playlist WHERE name = ?`,
 		name,
@@ -20,19 +20,20 @@ func (d *Db) GetPlaylist(name string) (Playlist, error) {
 	return playlist, err
 }
 
-func (d *Db) GetPlaylists() ([]Playlist, error) {
+func (d *Db) GetPlaylists() ([]shared.Playlist, error) {
 	rows, err := d.db.Query(
-		`SELECT name FROM playlist`,
+		`SELECT name,hash FROM playlist`,
 	)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var playlists []Playlist
+	var playlists []shared.Playlist
 	for rows.Next() {
-		var playlist Playlist
+		var playlist shared.Playlist
 		err := rows.Scan(
 			&playlist.Name,
+			&playlist.Hash,
 		)
 		if err != nil {
 			return nil, err
@@ -41,21 +42,22 @@ func (d *Db) GetPlaylists() ([]Playlist, error) {
 	}
 	return playlists, nil
 }
-
+func hashString(s string) string {
+	hash := md5.Sum([]byte(s))
+	return hex.EncodeToString(hash[:])
+}
 func (d *Db) AddPlaylist(plname string) error {
+	hash := hashString(plname) // or UUID or md5(plname)
+
 	_, err := d.db.Exec(
-		`INSERT OR IGNORE INTO playlist (name) VALUES (?)`,
-		plname,
+		`INSERT OR IGNORE INTO playlist (name, hash) VALUES (?, ?)`,
+		plname, hash,
 	)
 	if err != nil && strings.Contains(err.Error(), "UNIQUE constraint failed") {
-		return fmt.Errorf(
-			"Playlist %s already exists",
-			plname,
-		)
+		return fmt.Errorf("Playlist %s already exists", plname)
 	}
 	return err
 }
-
 func (d *Db) RemovePlaylist(name string) error {
 	_, err := d.db.Exec(
 		`DELETE FROM playlist WHERE name = ?`,
@@ -98,7 +100,7 @@ func (d *Db) RemoveMusicFromPlaylist(
 
 func (d *Db) GetMusicsFromPlaylist(playlistName string) ([]Music, error) {
 	rows, err := d.db.Query(
-		`SELECT m.name, m.source, m.key, m.data
+		`SELECT m.name, m.source, m.key, m.data,m.hash
          FROM music m
         JOIN music_playlist mp ON m.name = mp.music_name
          WHERE mp.playlist_name = ?`,
@@ -127,10 +129,35 @@ func (d *Db) GetMusicsFromPlaylist(playlistName string) ([]Music, error) {
 	return musics, nil
 }
 
+func (d *Db) GetPlaylistMusicsMeta(playlistName string) ([]shared.MusicMeta, error) {
+	rows, err := d.db.Query(
+		`SELECT m.name, m.hash
+		 FROM music m
+		 JOIN music_playlist mp ON m.name = mp.music_name
+		 WHERE mp.playlist_name = ?`,
+		playlistName,
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var songs []shared.MusicMeta
+	for rows.Next() {
+		var song shared.MusicMeta
+		if err := rows.Scan(&song.Name, &song.Hash); err != nil {
+			return nil, err
+		}
+		songs = append(songs, song)
+	}
+
+	return songs, nil
+}
 func (d *Db) InitPlaylist() error {
 	_, err := d.db.Exec(
 		`CREATE TABLE IF NOT EXISTS playlist (
-      name TEXT PRIMARY KEY
+      name TEXT PRIMARY KEY,
+      hash TEXT UNIQUE NOT NULL
     )`,
 	)
 	return err

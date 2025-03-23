@@ -1,15 +1,27 @@
 package views
 
 import (
-	"math/rand"
-	"net/rpc"
-
-	"github.com/charmbracelet/bubbles/list"
-	tea "github.com/charmbracelet/bubbletea"
-
 	"github.com/XORbit01/retro/client/controller"
 	"github.com/XORbit01/retro/shared"
+	"github.com/charmbracelet/bubbles/list"
+	tea "github.com/charmbracelet/bubbletea"
+	"math/rand"
 )
+
+type PlaySongView struct {
+	Query string
+}
+
+func (v PlaySongView) Run(ctx UIContext) error {
+	model := NewModel(ctx.Client, v.Query)
+	model.callback = playCallback
+	model.quitMessage = PlayQuitMessage
+	model.initCmd = model.PlaySearch
+
+	p := tea.NewProgram(model)
+	_, err := p.Run()
+	return err
+}
 
 func playCallback(m model) error {
 	i := m.selectList.Index()
@@ -18,7 +30,7 @@ func playCallback(m model) error {
 }
 
 func PlayQuitMessage(m model) string {
-	randEmoji := playingEmojies[rand.Intn(len(playingEmojies))]
+	randEmoji := playingEmojis[rand.Intn(len(playingEmojis))]
 	return GetTheme().QuitTextStyle.Render(
 		randEmoji + " Playing song " + m.selectList.Items()[m.selectList.Index()].(searchResultItem).title + ", this may take a while if download needed",
 	)
@@ -41,16 +53,4 @@ func (m model) PlaySearch() tea.Msg {
 	return searchDone{
 		results: results,
 	}
-}
-
-func SearchThenSelect(query string, client *rpc.Client) error {
-	model := NewModel(client, query)
-	p := tea.NewProgram(model)
-	model.callback = playCallback
-	model.quitMessage = PlayQuitMessage
-	model.initCmd = model.PlaySearch
-	if _, err := p.Run(); err != nil {
-		return err
-	}
-	return nil
 }

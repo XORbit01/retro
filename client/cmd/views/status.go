@@ -17,7 +17,7 @@ func reformatDuration(duration time.Duration) string {
 	return fmt.Sprintf("%02d:%02d", int(duration.Minutes()), int(duration.Seconds())%60)
 }
 
-func convertVolumeToEmojie(volume uint8) string {
+func convertVolumeToEmoji(volume uint8) string {
 	if volume == 0 {
 		return volumeLevels[0]
 	}
@@ -34,7 +34,7 @@ func DisplayStatus(client *rpc.Client) {
 	status := controller.GetPlayerStatus(client)
 	queue := status.MusicQueue
 	if status.PlayerState == shared.Stopped {
-		fmt.Println(GetTheme().StoppedStyle.Render(emojiesStatus[shared.Stopped], " Stopped"))
+		fmt.Println(GetTheme().StoppedStyle.Render(emojisStatus[shared.Stopped], " Stopped"))
 	} else {
 
 		currentMusicName := queue[status.CurrMusicIndex]
@@ -49,14 +49,14 @@ func DisplayStatus(client *rpc.Client) {
 		prog.ShowPercentage = false
 		fmt.Println(GetTheme().ProgressStyle.Render(prog.ViewAs(currentPosition.Seconds() / status.CurrMusicDuration.Seconds())))
 
-		fmt.Println("   "+playingEmojies[rand.Intn(len(playingEmojies))], currentMusicName)
+		fmt.Println("   "+playingEmojis[rand.Intn(len(playingEmojis))], currentMusicName)
 		fmt.Println(GetTheme().PositionStyle.Copy().Inherit(GetTheme().ColoredTextStyle).Render(currentPositionStr, " / ", totalDurationStr))
 
 		switch status.PlayerState {
 		case shared.Playing:
-			fmt.Println(GetTheme().RunningStyle.Render(emojiesStatus[shared.Playing], " Playing", convertVolumeToEmojie(status.Volume)))
+			fmt.Println(GetTheme().RunningStyle.Render(emojisStatus[shared.Playing], " Playing", convertVolumeToEmoji(status.Volume)))
 		case shared.Paused:
-			fmt.Println(GetTheme().PausedStyle.Render(emojiesStatus[shared.Paused], " Paused"))
+			fmt.Println(GetTheme().PausedStyle.Render(emojisStatus[shared.Paused], " Paused"))
 		}
 		// display queue
 		for i, music := range queue {
@@ -74,7 +74,7 @@ func DisplayStatus(client *rpc.Client) {
 			case shared.Downloading:
 				fmt.Println(
 					GetTheme().FailStyle.Render(
-						failedEmojie,
+						failedEmoji,
 						"Failed to download ",
 						target,
 						":",
@@ -84,7 +84,7 @@ func DisplayStatus(client *rpc.Client) {
 			case shared.Searching:
 				fmt.Println(
 					GetTheme().FailStyle.Render(
-						failedEmojie,
+						failedEmoji,
 						"Failed to search ",
 						target,
 						":",
@@ -94,7 +94,7 @@ func DisplayStatus(client *rpc.Client) {
 			default:
 				fmt.Println(
 					GetTheme().FailStyle.Render(
-						failedEmojie,
+						failedEmoji,
 						"Failed to ",
 						target,
 						":",
@@ -107,10 +107,10 @@ func DisplayStatus(client *rpc.Client) {
 		switch task.Type {
 		case shared.Downloading:
 			fmt.Println(
-				GetTheme().TaskStyle.Render(tasksEmojies[task.Type], "Downloading ", target),
+				GetTheme().TaskStyle.Render(tasksEmojis[task.Type], "Downloading ", target),
 			)
 		case shared.Searching:
-			fmt.Println(GetTheme().TaskStyle.Render(tasksEmojies[task.Type], "Searching ", target))
+			fmt.Println(GetTheme().TaskStyle.Render(tasksEmojis[task.Type], "Searching ", target))
 		}
 	}
 }

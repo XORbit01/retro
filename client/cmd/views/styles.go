@@ -9,14 +9,14 @@ import (
 
 // Emoji and status mappings
 var (
-	emojiesType = map[string]string{
+	emojisType = map[string]string{
 		"youtube": "🎬",
 		"cache":   "💾",
 		"file":    "🎵",
 		"dir":     "📁",
 	}
 
-	playingEmojies = []string{
+	playingEmojis = []string{
 		"🎵",
 		"🎶",
 		"🎷",
@@ -25,13 +25,13 @@ var (
 		"🎺",
 	}
 
-	emojiesStatus = map[shared.PState]string{
+	emojisStatus = map[shared.PState]string{
 		shared.Playing: "▶️",
 		shared.Stopped: "🛑",
 		shared.Paused:  "⏸️",
 	}
 
-	tasksEmojies = map[int]string{
+	tasksEmojis = map[int]string{
 		shared.Downloading: "📥",
 		shared.Searching:   "🔍",
 	}
@@ -43,7 +43,7 @@ var (
 		"🔊",
 	}
 
-	failedEmojie  = "❌"
+	failedEmoji   = "❌"
 	defaultMargin = lipgloss.NewStyle().Margin(1, 2)
 )
 
@@ -132,7 +132,7 @@ func commonStyles(mainColor lipgloss.AdaptiveColor) Themes {
 	}
 }
 
-// Purple theme settings
+// NewPurpleTheme Purple theme settings
 func NewPurpleTheme() Themes {
 	purple := lipgloss.AdaptiveColor{Light: "#D8BFD8", Dark: "#800080"}
 	theme := commonStyles(purple)
@@ -141,7 +141,7 @@ func NewPurpleTheme() Themes {
 	return theme
 }
 
-// Pink theme settings
+// NewPinkTheme Pink theme settings
 func NewPinkTheme() Themes {
 	pink := lipgloss.AdaptiveColor{Light: "#FFC0CB", Dark: "#FF1493"}
 	theme := commonStyles(pink)
@@ -150,7 +150,7 @@ func NewPinkTheme() Themes {
 	return theme
 }
 
-// Blue theme settings
+// NewBlueTheme Blue theme settings
 func NewBlueTheme() Themes {
 	blue := lipgloss.AdaptiveColor{Light: "#ADD8E6", Dark: "#0000C7"}
 	theme := commonStyles(blue)
