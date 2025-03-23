@@ -2,14 +2,13 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/XORbit01/retro/client/cmd/views/selections"
+	"github.com/XORbit01/retro/client/cmd/views"
 	"os"
 	"strconv"
 	"strings"
 
 	"github.com/spf13/cobra"
 
-	"github.com/XORbit01/retro/client/cmd/views"
 	"github.com/XORbit01/retro/client/controller"
 	"github.com/XORbit01/retro/shared"
 )
@@ -44,7 +43,7 @@ var playCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) > 0 {
 			song := strings.Join(args, " ")
-			view := selections.PlaySongView{Query: song}
+			view := views.PlaySongView{Query: song}
 			ctx := views.UIContext{
 				Client: client,
 				Theme:  views.GetTheme(),
