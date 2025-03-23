@@ -31,12 +31,12 @@ func NewDirector(db *db.Db) (*Director, error) {
 }
 
 func NewDefaultDirector() (*Director, error) {
-	db, err := db.LoadDb(config.GetConfig().DBPath)
+	dbInstance, err := db.LoadDb(config.GetConfig().DBPath)
 	if err != nil {
 		return nil, err
 	}
 	director, err := NewDirector(
-		db,
+		dbInstance,
 	)
 	if err != nil {
 		return nil, err
@@ -55,8 +55,6 @@ func NewDefaultDirector() (*Director, error) {
 func (od *Director) Register(engine en.Engine) {
 	od.engines[engine.Name()] = engine
 }
-
-var times = 0
 
 func (od *Director) Search(
 	engineName, query string,

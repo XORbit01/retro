@@ -16,10 +16,6 @@ import (
 	"github.com/XORbit01/retro/shared"
 )
 
-var Instance *Player
-
-var once sync.Once
-
 type lmeta struct {
 	_lcurrentPos time.Duration
 	_lcurrentDur time.Duration
@@ -77,13 +73,6 @@ func (p *Player) _getlMeta() lmeta {
 	p.mu.Lock()
 	defer p.mu.Unlock()
 	return p._lmeta
-}
-
-func GetPlayer() *Player {
-	once.Do(func() {
-		Instance = NewPlayer()
-	})
-	return Instance
 }
 
 // ############################

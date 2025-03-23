@@ -4,6 +4,7 @@ import (
 	"crypto/md5"
 	"database/sql"
 	"encoding/hex"
+	"errors"
 	"fmt"
 
 	"github.com/XORbit01/retro/shared"
@@ -72,7 +73,7 @@ func (d *Db) insertUniqueMusicName(music *Music) error {
 		`SELECT name FROM music WHERE name LIKE ? ORDER BY name DESC LIMIT 1`,
 		fmt.Sprintf("%s%%", music.Name),
 	).Scan(&newName)
-	if err == sql.ErrNoRows {
+	if errors.Is(err, sql.ErrNoRows) {
 		// No similar names found, append _1
 		newName = fmt.Sprintf("%s_1", music.Name)
 	} else if err != nil {

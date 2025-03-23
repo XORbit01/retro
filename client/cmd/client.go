@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/XORbit01/retro/client/cmd/views/selections"
 	"os"
 	"strconv"
 	"strings"
@@ -43,7 +44,7 @@ var playCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) > 0 {
 			song := strings.Join(args, " ")
-			view := views.PlaySongView{Query: song}
+			view := selections.PlaySongView{Query: song}
 			ctx := views.UIContext{
 				Client: client,
 				Theme:  views.GetTheme(),
@@ -259,14 +260,14 @@ If a playlist name is provided, it will list all the songs in that playlist.
 		if client == nil {
 			return nil, cobra.ShellCompDirectiveNoFileComp
 		}
-		list_metas := controller.GetPlayListsMeta(client)
-		list_names := make([]string, len(list_metas))
-		for _, list_m := range list_metas {
-			list_names = append(list_names, list_m.Name)
+		listMetas := controller.GetPlayListsMeta(client)
+		listNames := make([]string, len(listMetas))
+		for _, listM := range listMetas {
+			listNames = append(listNames, listM.Name)
 		}
 
 		if len(args) == 0 {
-			return list_names, cobra.ShellCompDirectiveDefault
+			return listNames, cobra.ShellCompDirectiveDefault
 		}
 		return nil, cobra.ShellCompDirectiveNoFileComp
 	},
@@ -327,13 +328,13 @@ if a song index is provided, it will remove the song from the playlist
 			return nil, cobra.ShellCompDirectiveNoFileComp
 		}
 
-		list_metas := controller.GetPlayListsMeta(client)
-		list_names := make([]string, len(list_metas))
-		for _, list_m := range list_metas {
-			list_names = append(list_names, list_m.Name)
+		listMetas := controller.GetPlayListsMeta(client)
+		listNames := make([]string, len(listMetas))
+		for _, listM := range listMetas {
+			listNames = append(listNames, listM.Name)
 		}
 		if len(args) == 0 {
-			return list_names, cobra.ShellCompDirectiveDefault
+			return listNames, cobra.ShellCompDirectiveDefault
 		}
 		if len(args) == 1 {
 			songs := controller.GetPlayListMusicsMeta(args[0], client)
@@ -392,13 +393,13 @@ and you can play it using the "list play" command
 		if client == nil {
 			return nil, cobra.ShellCompDirectiveNoFileComp
 		}
-		list_metas := controller.GetPlayListsMeta(client)
-		list_names := make([]string, len(list_metas))
-		for _, list_m := range list_metas {
-			list_names = append(list_names, list_m.Name)
+		listMetas := controller.GetPlayListsMeta(client)
+		listNames := make([]string, len(listMetas))
+		for _, listM := range listMetas {
+			listNames = append(listNames, listM.Name)
 		}
 		if len(args) == 0 {
-			return list_names, cobra.ShellCompDirectiveDefault
+			return listNames, cobra.ShellCompDirectiveDefault
 		}
 		if len(args) == 1 {
 			// get music in queue
@@ -413,9 +414,13 @@ and you can play it using the "list play" command
 			fmt.Println("playlist name and query required")
 			return
 		}
-		listname := strings.TrimSpace(args[0])
+		listName := strings.TrimSpace(args[0])
 		query := strings.Join(args[1:], " ")
-		views.SearchThenAddToPlayList(listname, query, client)
+		err := views.SearchThenAddToPlayList(listName, query, client)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
 	},
 }
 
@@ -431,22 +436,22 @@ if a song name is provided, it will add the song to the queue
 		if client == nil {
 			return nil, cobra.ShellCompDirectiveNoFileComp
 		}
-		list_metas := controller.GetPlayListsMeta(client)
-		list_names := make([]string, len(list_metas))
-		for _, list_m := range list_metas {
-			list_names = append(list_names, list_m.Name)
+		listMetas := controller.GetPlayListsMeta(client)
+		listNames := make([]string, len(listMetas))
+		for _, listM := range listMetas {
+			listNames = append(listNames, listM.Name)
 		}
 
 		if len(args) == 0 {
-			return list_names, cobra.ShellCompDirectiveDefault
+			return listNames, cobra.ShellCompDirectiveDefault
 		}
 		if len(args) == 1 {
 			songs := controller.GetPlayListMusicsMeta(args[0], client)
-			songs_names := make([]string, len(songs))
+			songsNames := make([]string, len(songs))
 			for _, song := range songs {
-				songs_names = append(songs_names, song.Name)
+				songsNames = append(songsNames, song.Name)
 			}
-			return songs_names, cobra.ShellCompDirectiveDefault
+			return songsNames, cobra.ShellCompDirectiveDefault
 		}
 		return nil, cobra.ShellCompDirectiveNoFileComp
 	},

@@ -2,11 +2,8 @@ package shared
 
 import (
 	"fmt"
-	"os"
 	"strings"
 	"time"
-
-	"github.com/gopxl/beep/mp3"
 )
 
 type Task struct {
@@ -76,20 +73,6 @@ type PlayListPlayMusicArgs struct {
 	IndexOrName  IntOrString
 }
 
-// helper function to get mp3 duration
-func GetMp3Duration(path string) (time.Duration, error) {
-	f, err := os.Open(path)
-	if err != nil {
-		return 0, err
-	}
-	defer f.Close()
-	music, format, err := mp3.Decode(f)
-	if err != nil {
-		return 0, err
-	}
-	return format.SampleRate.D(music.Len()), nil
-}
-
 // function converts 00:00:00 to time.Duration
 func StringToDuration(s string) (time.Duration, error) {
 	sp := strings.Split(s, ":")
@@ -132,4 +115,3 @@ type HashNamed struct {
 type Playlist = HashNamed
 type MusicMeta = HashNamed
 type CacheItem = HashNamed
-

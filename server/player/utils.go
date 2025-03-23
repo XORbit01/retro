@@ -5,7 +5,6 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"io"
-	"os"
 	"time"
 
 	"github.com/gopxl/beep"
@@ -32,40 +31,6 @@ func MusicDecode(data []byte) (beep.StreamSeekCloser, beep.Format, error) {
 	reader := bytes.NewReader(data)
 	readerCloser := &customReadCloser{Reader: reader, Seeker: reader}
 	return mp3.Decode(readerCloser)
-}
-
-func copyFile(sourcePath, destinationPath string) error {
-	sourceFile, err := os.Open(sourcePath)
-	if err != nil {
-		return err
-	}
-	defer sourceFile.Close()
-
-	destinationFile, err := os.Create(destinationPath)
-	if err != nil {
-		return err
-	}
-	defer destinationFile.Close()
-
-	_, err = io.Copy(destinationFile, sourceFile)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func createTmpFile(data []byte) (*os.File, error) {
-	f, err := os.CreateTemp("", "retro_")
-	if err != nil {
-		return nil, err
-	}
-	if data != nil {
-		f.Write(
-			data,
-		)
-	}
-	return f, nil
 }
 
 func hash(data []byte) string {
