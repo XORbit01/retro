@@ -22,15 +22,16 @@ type lmeta struct {
 }
 
 type Player struct {
-	Queue       *MusicQueue
-	playerState shared.PState
-	done        chan struct{}
-	initialised bool
-	Director    *Director
-	Tasks       map[string]shared.Task
-	Vol         uint8
-	_lmeta      lmeta
-	mu          sync.Mutex
+	Queue             *MusicQueue
+	playerState       shared.PState
+	done              chan struct{}
+	initialised       bool
+	Director          *Director
+	Tasks             map[string]shared.Task
+	Vol               uint8
+	_lmeta            lmeta
+	speakerSampleRate beep.SampleRate
+	mu                sync.Mutex
 }
 
 func NewPlayer() *Player {
@@ -49,14 +50,26 @@ func NewPlayer() *Player {
 	}
 
 	return &Player{
-		Queue:       NewMusicQueue(),
-		playerState: shared.Stopped,
-		done:        make(chan struct{}),
-		initialised: false,
-		Director:    director,
-		Vol:         100,
-		Tasks:       make(map[string]shared.Task),
+		Queue:             NewMusicQueue(),
+		playerState:       shared.Stopped,
+		done:              make(chan struct{}),
+		initialised:       false,
+		Director:          director,
+		Vol:               75,
+		Tasks:             make(map[string]shared.Task),
+		speakerSampleRate: 44100,
 	}
+}
+func (p *Player) InitSpeaker(sampleRate beep.SampleRate) error {
+	if !p.initialised {
+		err := speaker.Init(sampleRate, sampleRate.N(time.Second/10))
+		if err != nil {
+			return err
+		}
+		p.speakerSampleRate = sampleRate
+		p.initialised = true
+	}
+	return nil
 }
 
 // meta field is to save the current position and duration of
@@ -80,58 +93,54 @@ func (p *Player) _getlMeta() lmeta {
 // ############################
 func (p *Player) Play() error {
 	if p.Queue.IsEmpty() {
-		return logger.LogError(
-			logger.GError(
-				"Queue is empty",
-			),
-		)
-	}
-	music := p.Queue.GetCurrMusic()
-	if music == nil {
-		return logger.LogError(
-			logger.GError(
-				"Failed to get current music",
-			),
-		)
+		return logger.LogError(logger.GError("Queue is empty"))
 	}
 
+	music := p.Queue.GetCurrMusic()
+	if music == nil {
+		return logger.LogError(logger.GError("Failed to get current music"))
+	}
+
+	// Initialize the speaker if not already done
 	if !p.initialised {
-		err := speaker.Init(
-			music.Format.SampleRate,
-			music.Format.SampleRate.N(time.Second/10),
-		)
+		err := p.InitSpeaker(music.Format.SampleRate)
 		if err != nil {
 			return err
 		}
-		p.initialised = true
-	} else {
-		// this lib is very stupid in synchronizing the speaker
-		if !p.isSpeakerLocked() {
-			speaker.Clear()
-		} else {
-			speaker.Unlock()
-			speaker.Clear()
-		}
 	}
-	p.setPlayerState(
-		shared.Playing,
-	)
+
+	// Clear and unlock the speaker if necessary
+	if p.isSpeakerLocked() {
+		speaker.Unlock()
+	}
+	speaker.Clear()
+
+	p.setPlayerState(shared.Playing)
+
 	go func() {
-		done := make(
-			chan struct{},
-		)
+		done := make(chan struct{})
 		music.SetVolume(p.Vol)
-		speaker.Play(
-			beep.Seq(
+
+		// Resample the stream if its sample rate differs from the speaker's
+		var streamer beep.Streamer = music.Volume
+		if music.Format.SampleRate != p.speakerSampleRate {
+			streamer = beep.Resample(
+				4, // quality: 1 (fastest) to 4 (best)
+				music.Format.SampleRate,
+				p.speakerSampleRate,
 				music.Volume,
-				beep.Callback(
-					func() { done <- struct{}{} },
-				),
-			),
-		)
+			)
+		}
+
+		speaker.Play(beep.Seq(
+			streamer,
+			beep.Callback(func() { done <- struct{}{} }),
+		))
+
 		<-done
 		p.Next()
 	}()
+
 	return nil
 }
 
