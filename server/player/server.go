@@ -87,7 +87,7 @@ func (p *Player) RPCGetPlayerStatus(_ int, reply *shared.Status) error {
 	return nil
 }
 
-func (p *Player) RPCDetectAndPlay(query string, reply *[]shared.SearchResult) error {
+func (p *Player) RPCDetectAndPlay(query shared.DetectQuery, reply *[]shared.SearchResult) error {
 	logger.LogInfo("RPCDetectAndPlay called with query :", query)
 	var err error
 	*reply, err = p.DetectAndPlay(query)
@@ -120,7 +120,7 @@ func (p *Player) RPCRemovePlayList(name string, reply *int) error {
 }
 
 func (p *Player) RPCDetectAndAddToPlayList(
-	args shared.AddToPlayListArgs,
+	args shared.AddToPlayListQuery,
 	reply *[]shared.SearchResult,
 ) error {
 	logger.LogInfo(
@@ -130,7 +130,7 @@ func (p *Player) RPCDetectAndAddToPlayList(
 		args.PlayListName,
 	)
 	var err error
-	*reply, err = p.DetectAndAddToPlayList(args.PlayListName, args.Query)
+	*reply, err = p.DetectAndAddToPlayList(args)
 	logger.LogInfo("RPCDetectAndAddToPlayList done")
 	return err
 }

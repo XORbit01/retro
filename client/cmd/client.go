@@ -43,7 +43,7 @@ var playCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) > 0 {
 			song := strings.Join(args, " ")
-			view := views.PlaySongView{Query: song}
+			view := views.NewPlaySongView(song)
 			ctx := views.UIContext{
 				Client: client,
 				Theme:  views.GetTheme(),

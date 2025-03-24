@@ -11,7 +11,7 @@ import (
 	"github.com/XORbit01/retro/shared"
 )
 
-func (yt *youtubeEngine) Exists(videoUrl string) (bool, error) {
+func (yt *YoutubeEngine) Exists(videoUrl string) (bool, error) {
 	cmd := exec.Command(
 		yt.ytdlpPath,
 		"--ies",
@@ -35,27 +35,27 @@ func (yt *youtubeEngine) Exists(videoUrl string) (bool, error) {
 	return true, nil
 }
 
-func (yt *youtubeEngine) Name() string {
-	return "youtube"
+func (yt *YoutubeEngine) Name() shared.DResults {
+	return shared.DYoutube
 }
 
-type youtubeEngine struct {
+type YoutubeEngine struct {
 	ytdlpPath string
 }
 
-func NewYoutubeEngine() (*youtubeEngine, error) {
+func NewYoutubeEngine() (*YoutubeEngine, error) {
 	path := "yt-dlp"
 	absPath, err := exec.LookPath(path)
 	if err != nil {
 		return nil, err
 	}
-	return &youtubeEngine{
+	return &YoutubeEngine{
 		ytdlpPath: absPath,
 	}, nil
 }
 
 // Search why I used ytdlp instead of YouTube lib : because ytdlp doesn't need API key to search
-func (yt *youtubeEngine) Search(query string, maxResults int) ([]shared.SearchResult, error) {
+func (yt *YoutubeEngine) Search(query string, maxResults int) ([]shared.SearchResult, error) {
 	cmd := exec.Command(
 		yt.ytdlpPath,
 		"--get-id",
@@ -101,7 +101,7 @@ func (yt *youtubeEngine) Search(query string, maxResults int) ([]shared.SearchRe
 	return results, nil
 }
 
-func (yt *youtubeEngine) getYoutubeTitleFromUrl(url string) (string, error) {
+func (yt *YoutubeEngine) getYoutubeTitleFromUrl(url string) (string, error) {
 	cmd := exec.Command(
 		yt.ytdlpPath, "--get-title", url,
 	)
@@ -121,7 +121,7 @@ func giveMeTempFileName() (string, error) {
 	return tmpSongFile.Name(), nil
 }
 
-func (yt *youtubeEngine) Download(videoUrl string) (io.ReadCloser, string, error) {
+func (yt *YoutubeEngine) Download(videoUrl string) (io.ReadCloser, string, error) {
 	videoTitle, err := yt.getYoutubeTitleFromUrl(videoUrl)
 	if err != nil {
 		return nil, "", err
@@ -171,6 +171,6 @@ func (yt *youtubeEngine) Download(videoUrl string) (io.ReadCloser, string, error
 	return reader, videoTitle, nil
 }
 
-func (yt *youtubeEngine) MaxResults() int {
+func (yt *YoutubeEngine) MaxResults() int {
 	return 10
 }

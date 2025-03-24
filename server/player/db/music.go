@@ -188,12 +188,12 @@ func (m Music) GetHash() string {
 	return m.Hash
 }
 
-func (d *Db) GetMusicByHashPrefix(hash_p string) (Music, error) {
+func (d *Db) GetMusicByHashPrefix(hashP string) (Music, error) {
 	var music Music
 	err := d.db.QueryRow(
 		`SELECT name, source, key, data, hash FROM music WHERE SUBSTRING(hash, 1, ?) = SUBSTRING(?, 1, ?)`,
 		shared.HashPrefixLength,
-		hash_p,
+		hashP,
 		shared.HashPrefixLength,
 	).Scan(
 		&music.Name,

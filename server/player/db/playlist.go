@@ -54,7 +54,7 @@ func (d *Db) AddPlaylist(plname string) error {
 		plname, hash,
 	)
 	if err != nil && strings.Contains(err.Error(), "UNIQUE constraint failed") {
-		return fmt.Errorf("Playlist %s already exists", plname)
+		return fmt.Errorf("playlist %s already exists", plname)
 	}
 	return err
 }
@@ -78,7 +78,7 @@ func (d *Db) AddMusicToPlaylist(musicName, playlistName string) error {
 	)
 	if err != nil && strings.Contains(err.Error(), "UNIQUE constraint failed") {
 		return fmt.Errorf(
-			"Music %s already in playlist %s",
+			"music %s already in playlist %s",
 			musicName,
 			playlistName,
 		)
@@ -119,6 +119,7 @@ func (d *Db) GetMusicsFromPlaylist(playlistName string) ([]Music, error) {
 			&music.Source,
 			&music.Key,
 			&music.Data,
+			&music.Hash,
 		)
 		if err != nil {
 			return nil, err

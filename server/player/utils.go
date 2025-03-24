@@ -39,18 +39,6 @@ func hash(data []byte) string {
 	return hex.EncodeToString(hash.Sum(nil))
 }
 
-type DResults string
-
-const (
-	DUnknown  DResults = "unknown"
-	DDir      DResults = "dir"
-	DFile     DResults = "file"
-	DQueue    DResults = "queue"
-	DPlaylist DResults = "playlist"
-	DYoutube  DResults = "youtube"
-	DCache    DResults = "cache"
-)
-
 func adjustDiscordRPC(state shared.PState, music string) {
 	if config.GetConfig().DiscordRPC {
 		switch state {

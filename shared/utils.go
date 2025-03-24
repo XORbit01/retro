@@ -54,13 +54,8 @@ func (s Status) String() string {
 type SearchResult struct {
 	Title       string
 	Destination string
-	Type        string
+	Type        DResults
 	Duration    time.Duration
-}
-
-type AddToPlayListArgs struct {
-	PlayListName string
-	Query        string
 }
 
 type RemoveMusicFromPlayListArgs struct {
@@ -110,6 +105,16 @@ type IntOrString struct {
 type HashNamed struct {
 	Name string
 	Hash string
+}
+
+type DetectQuery struct {
+	Query   string
+	Knowing DResults
+}
+type AddToPlayListQuery struct {
+	PlayListName string
+	Query        string
+	Knowing      DResults
 }
 
 type Playlist = HashNamed

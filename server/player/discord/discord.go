@@ -5,7 +5,7 @@ import (
 	"github.com/hugolgst/rich-go/client"
 )
 
-const DISCORD_CLIENT_ID = "1208868446926807040"
+const ClientId = "1208868446926807040"
 
 type State string
 
@@ -29,7 +29,7 @@ var Activity = client.Activity{
 
 func initClient(music string) error {
 	if err := client.Login(
-		DISCORD_CLIENT_ID,
+		ClientId,
 	); err != nil {
 		return err
 	}

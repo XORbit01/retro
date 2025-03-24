@@ -40,13 +40,11 @@ func RemovePlayList(name string, client *rpc.Client) {
 }
 
 func DetectAndAddToPlayList(
-	name string,
-	query string,
+	query shared.AddToPlayListQuery,
 	client *rpc.Client,
 ) ([]shared.SearchResult, error) {
-	args := shared.AddToPlayListArgs{PlayListName: name, Query: query}
 	var reply []shared.SearchResult
-	err := client.Call("Player.RPCDetectAndAddToPlayList", args, &reply)
+	err := client.Call("Player.RPCDetectAndAddToPlayList", query, &reply)
 	return reply, err
 }
 

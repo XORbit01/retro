@@ -10,6 +10,6 @@ type Engine interface {
 	Search(query string, maxResults int) ([]shared.SearchResult, error)
 	Download(url string) (io.ReadCloser, string, error)
 	Exists(url string) (bool, error)
-	Name() string
+	Name() shared.DResults
 	MaxResults() int
 }

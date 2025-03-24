@@ -9,11 +9,11 @@ import (
 
 // Emoji and status mappings
 var (
-	emojisType = map[string]string{
-		"youtube": "🎬",
-		"cache":   "💾",
-		"file":    "🎵",
-		"dir":     "📁",
+	emojisType = map[shared.DResults]string{
+		shared.DYoutube: "🎬",
+		shared.DCache:   "💾",
+		shared.DFile:    "🎵",
+		shared.DDir:     "📁",
 	}
 
 	playingEmojis = []string{
@@ -49,20 +49,21 @@ var (
 
 // Themes struct encapsulates all theme-related styles
 type Themes struct {
-	MainColorStyle   string
-	DocStyle         lipgloss.Style
-	QuitTextStyle    lipgloss.Style
-	SpinnerStyle     lipgloss.Style
-	ProgressStyle    lipgloss.Style
-	ColoredTextStyle lipgloss.Style
-	RunningStyle     lipgloss.Style
-	StoppedStyle     lipgloss.Style
-	PausedStyle      lipgloss.Style
-	PositionStyle    lipgloss.Style
-	SelectMusicStyle lipgloss.Style
-	FailStyle        lipgloss.Style
-	TaskStyle        lipgloss.Style
-	ListDelegate     list.DefaultDelegate
+	MainColorStyle         string
+	DocStyle               lipgloss.Style
+	QuitTextStyle          lipgloss.Style
+	SpinnerStyle           lipgloss.Style
+	ProgressStyle          lipgloss.Style
+	ColoredTextStyle       lipgloss.Style
+	RunningStyle           lipgloss.Style
+	StoppedStyle           lipgloss.Style
+	PausedStyle            lipgloss.Style
+	PositionStyle          lipgloss.Style
+	SelectMusicsTitleStyle lipgloss.Style
+	SelectMusicStyle       lipgloss.Style
+	FailStyle              lipgloss.Style
+	TaskStyle              lipgloss.Style
+	ListDelegate           list.DefaultDelegate
 }
 
 // Helper function to create item styles
@@ -120,8 +121,9 @@ func commonStyles(mainColor lipgloss.AdaptiveColor) Themes {
 		PausedStyle: lipgloss.NewStyle().
 			Foreground(lipgloss.Color("#0000FF")).
 			Margin(1, 0, 2, 3),
-		PositionStyle:    positionStyle,
-		SelectMusicStyle: lipgloss.NewStyle().Foreground(mainColor).Margin(0, 0, 0, 1).Bold(true),
+		PositionStyle:          positionStyle,
+		SelectMusicsTitleStyle: lipgloss.NewStyle(),
+		SelectMusicStyle:       lipgloss.NewStyle().Foreground(mainColor).Margin(0, 0, 0, 1).Bold(true),
 		FailStyle: lipgloss.NewStyle().
 			Foreground(lipgloss.Color("#FFA500")).
 			Margin(1, 0, 0, 3),

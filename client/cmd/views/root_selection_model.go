@@ -2,7 +2,6 @@ package views
 
 import (
 	"fmt"
-	"github.com/XORbit01/retro/client/controller"
 	"github.com/XORbit01/retro/shared"
 	"github.com/charmbracelet/bubbles/list"
 	"github.com/charmbracelet/bubbles/spinner"
@@ -13,22 +12,27 @@ import (
 type searchResultItem struct {
 	title    string
 	desc     string
-	ftype    string
+	ftype    shared.DResults
 	duration string
 }
 
 func (i searchResultItem) Title() string {
-	if i.ftype == "cache" {
+	if i.ftype == shared.DCache {
 		return i.title
 	}
 	return i.title
 }
 
 func (i searchResultItem) Description() string {
-	return emojisType[i.ftype] + " " + i.ftype + " " + i.duration
+	return emojisType[i.ftype] + " " + string(i.ftype) + " " + i.duration
 }
 
 func (i searchResultItem) FilterValue() string { return "" }
+
+type DetectCommand interface {
+	Execute(query string, knowing shared.DResults, client *rpc.Client) ([]shared.SearchResult, error)
+	QuitMessage() string
+}
 
 type RootModel struct {
 	state  AppState
@@ -41,22 +45,20 @@ type RootModel struct {
 	selectedItem   list.Item
 	err            error
 
-	runCallback func(item list.Item, client *rpc.Client) tea.Cmd
-	quitMessage func(item list.Item) string
+	commander DetectCommand
 }
 
-func NewRootModel(client *rpc.Client, query string) RootModel {
+func NewRootModel(client *rpc.Client, query string, commander DetectCommand) RootModel {
 	spin := spinner.New()
 	spin.Spinner = spinner.Points
 	spin.Style = GetTheme().SpinnerStyle
 
 	return RootModel{
-		state:       StateSearching,
-		client:      client,
-		query:       query,
-		searchView:  spin,
-		runCallback: defaultCallback,
-		quitMessage: defaultQuitMessage,
+		state:      StateSearching,
+		client:     client,
+		query:      query,
+		searchView: spin,
+		commander:  commander,
 	}
 }
 
@@ -82,6 +84,7 @@ func (m RootModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 			m.selectView = list.New(msg.Results, GetTheme().ListDelegate, 50, 14)
 			m.selectView.Title = "Select a song 👇"
+			m.selectView.Styles.Title = GetTheme().SelectMusicsTitleStyle
 			m.selectView.SetFilteringEnabled(false)
 			m.selectView.SetShowHelp(false)
 			m.state = StateSelecting
@@ -100,7 +103,11 @@ func (m RootModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.selectedItem = selected
 				m.processingText = "Processing..."
 				m.state = StateProcessing
-				return m, tea.Batch(m.searchView.Tick, m.runCallback(selected, m.client))
+				callback := func() tea.Msg {
+					m.commander.Execute(selected.(searchResultItem).desc, selected.(searchResultItem).ftype, m.client)
+					return CallbackFinishedMsg{}
+				}
+				return m, tea.Batch(m.searchView.Tick, callback)
 			}
 		}
 		return m, cmd
@@ -131,10 +138,9 @@ func (m RootModel) View() string {
 		if m.err != nil {
 			return fmt.Sprintf("An error occurred: %v", m.err)
 		}
-		if m.selectedItem != nil && m.quitMessage != nil {
-			return m.quitMessage(m.selectedItem)
+		if m.selectedItem != nil && m.commander.QuitMessage() != "" {
+			return GetTheme().QuitTextStyle.Render(m.commander.QuitMessage())
 		}
-
 		return "Done!"
 	default:
 		return "Unknown state"
@@ -143,7 +149,7 @@ func (m RootModel) View() string {
 
 func (m RootModel) performSearch(query string) tea.Cmd {
 	return func() tea.Msg {
-		musics, err := controller.DetectAndPlay(query, m.client)
+		musics, err := m.commander.Execute(query, shared.DUnknown, m.client)
 		if err != nil {
 			return SearchFinishedMsg{Err: err}
 		}
@@ -161,17 +167,4 @@ func (m RootModel) performSearch(query string) tea.Cmd {
 		}
 		return SearchFinishedMsg{Results: items}
 	}
-}
-
-func defaultCallback(item list.Item, client *rpc.Client) tea.Cmd {
-	return func() tea.Msg {
-		desc := item.(searchResultItem).desc
-		controller.DetectAndPlay(desc, client)
-		return CallbackFinishedMsg{}
-	}
-}
-
-func defaultQuitMessage(item list.Item) string {
-	title := item.(searchResultItem).title
-	return GetTheme().QuitTextStyle.Render("🎵 Playing song " + title + ", this may take a while if download is needed")
 }

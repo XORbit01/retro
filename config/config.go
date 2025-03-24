@@ -67,21 +67,21 @@ func mergeConfigs(config, defaultConfig *Config) *Config {
 }
 
 func initConfig() *Config {
-	retro_path := os.Getenv("HOME") + "/.retro/"
-	configPath := filepath.Join(retro_path, "config.json")
+	retroPath := os.Getenv("HOME") + "/.retro/"
+	configPath := filepath.Join(retroPath, "config.json")
 	var config *Config
 
 	// Load default config
 	defaultConfig := &Config{
-		RetroPath:     retro_path,
+		RetroPath:     retroPath,
 		PathYTDL:      "yt-dlp",
 		PathFFmpeg:    "ffmpeg",
 		PathFFprobe:   "ffprobe",
 		SearchTimeout: 60 * time.Second,
 		Theme:         "pink",
 		DiscordRPC:    true,
-		LogFile:       filepath.Join(retro_path, "retro.log"),
-		DBPath:        filepath.Join(retro_path, "retro.db"),
+		LogFile:       filepath.Join(retroPath, "retro.log"),
+		DBPath:        filepath.Join(retroPath, "retro.db"),
 		ServerPort:    "3131",
 	}
 

@@ -15,7 +15,7 @@ import (
 type Director struct {
 	Converter *Converter
 	Db        *db.Db
-	engines   map[string]en.Engine // key: engine name, value: engine
+	engines   map[shared.DResults]en.Engine // key: engine name, value: engine
 }
 
 func NewDirector(db *db.Db) (*Director, error) {
@@ -24,7 +24,7 @@ func NewDirector(db *db.Db) (*Director, error) {
 		return nil, err
 	}
 	return &Director{
-		engines:   make(map[string]en.Engine),
+		engines:   make(map[shared.DResults]en.Engine),
 		Db:        db,
 		Converter: c,
 	}, nil
@@ -57,7 +57,7 @@ func (od *Director) Register(engine en.Engine) {
 }
 
 func (od *Director) Search(
-	engineName, query string,
+	engineName shared.DResults, query string,
 ) ([]shared.SearchResult, error) {
 	engine, ok := od.engines[engineName]
 	if !ok {
@@ -67,14 +67,14 @@ func (od *Director) Search(
 	return engine.Search(query, engine.MaxResults())
 }
 
-func (od *Director) Download(engineName, url string) (*db.Music, error) {
+func (od *Director) Download(engineName shared.DResults, url string) (*db.Music, error) {
 	engine, ok := od.engines[engineName]
 	if !ok {
 		return nil, errors.New("engine not found")
 	}
 	// check if file is Cached
 	music, err := od.Db.GetMusic(
-		engine.Name(),
+		string(engine.Name()),
 		url,
 	)
 	if err == nil {
@@ -105,7 +105,7 @@ func (od *Director) Download(engineName, url string) (*db.Music, error) {
 	// cache it to db
 	music = db.Music{
 		Name:   name,
-		Source: engine.Name(),
+		Source: string(engine.Name()),
 		Key:    url,
 		Data:   mp3data,
 	}
@@ -120,6 +120,6 @@ func (od *Director) Download(engineName, url string) (*db.Music, error) {
 	return &music, nil
 }
 
-func (od *Director) GetEngines() map[string]en.Engine {
+func (od *Director) GetEngines() map[shared.DResults]en.Engine {
 	return od.engines
 }

@@ -128,7 +128,7 @@ func (p *Player) AddMusicsFromDir(dirPath string, how callback) error {
 // the unique is the unique id of the music in the engine it can be url or id
 func (p *Player) AddMusicFromOnline(
 	unique string,
-	engineName string,
+	engineName shared.DResults,
 	how callback,
 ) error {
 	p.addTask(unique, shared.Downloading)

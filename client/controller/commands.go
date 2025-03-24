@@ -108,7 +108,7 @@ func GetPlayerStatus(client *rpc.Client) shared.Status {
 	return reply
 }
 
-func DetectAndPlay(query string, client *rpc.Client) ([]shared.SearchResult, error) {
+func DetectAndPlay(query shared.DetectQuery, client *rpc.Client) ([]shared.SearchResult, error) {
 	var reply []shared.SearchResult
 	err := client.Call("Player.RPCDetectAndPlay", query, &reply)
 	return reply, err
