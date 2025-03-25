@@ -8,7 +8,6 @@ import (
 	"github.com/XORbit01/retro/shared"
 )
 
-// TODO:
 func GetPlayListsMeta(client *rpc.Client) []shared.Playlist {
 	var reply []shared.Playlist
 	err := client.Call("Player.RPCPlayListsMeta", 0, &reply)

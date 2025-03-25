@@ -1,5 +1,7 @@
 package logger
 
+import "fmt"
+
 type RetroError struct {
 	Err     string
 	Details []error
@@ -8,14 +10,14 @@ type RetroError struct {
 func (e RetroError) Error() string {
 	ers := e.Err
 	for _, detail := range e.Details {
-		ers += "\n" + detail.Error()
+		ers += " " + detail.Error()
 	}
 	return ers
 }
 
-func GError(err string, details ...error) RetroError {
+func GError(parts ...any) RetroError {
 	return RetroError{
-		Err:     err,
-		Details: details,
+		Err:     fmt.Sprint(parts...), // Fix is here
+		Details: nil,
 	}
 }

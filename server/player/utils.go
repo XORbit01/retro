@@ -82,15 +82,6 @@ func adjustDiscordRPC(state shared.PState, music string) {
 	}
 }
 
-// returns true if the player was locked
-func (p *Player) unlockIfLocked() bool {
-	if p.getPlayerState() == shared.Stopped {
-		speaker.Unlock()
-		return true
-	}
-	return false
-}
-
 func (p *Player) isSpeakerLocked() bool {
 	return p.getPlayerState() == shared.Paused
 }

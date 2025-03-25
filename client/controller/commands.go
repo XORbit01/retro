@@ -2,9 +2,12 @@ package controller
 
 import (
 	"fmt"
-	"github.com/XORbit01/retro/config"
+	"net"
 	"net/rpc"
 	"os"
+	"time"
+
+	"github.com/XORbit01/retro/config"
 
 	"github.com/XORbit01/retro/shared"
 )
@@ -157,12 +160,30 @@ var client *rpc.Client
 
 func GetClient() (*rpc.Client, error) {
 	cfg := config.GetConfig()
+	address := "localhost:" + cfg.ServerPort
+
+	// Check if server is alive before dialing
+	if !isServerAlive(address) {
+		return nil, fmt.Errorf("server is not reachable at %s", address)
+	}
+
+	// Dial the RPC server
 	if client == nil {
 		var err error
-		client, err = rpc.Dial("tcp", "localhost:"+cfg.ServerPort)
+		client, err = rpc.Dial("tcp", address)
 		if err != nil {
 			return nil, err
 		}
 	}
 	return client, nil
+}
+
+// isServerAlive checks if the server is listening on the given address
+func isServerAlive(address string) bool {
+	conn, err := net.DialTimeout("tcp", address, 2*time.Second)
+	if err != nil {
+		return false
+	}
+	conn.Close()
+	return true
 }

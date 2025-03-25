@@ -126,7 +126,7 @@ func commonStyles(mainColor lipgloss.AdaptiveColor) Themes {
 		SelectMusicStyle:       lipgloss.NewStyle().Foreground(mainColor).Margin(0, 0, 0, 1).Bold(true),
 		FailStyle: lipgloss.NewStyle().
 			Foreground(lipgloss.Color("#FFA500")).
-			Margin(1, 0, 0, 3),
+			Margin(1, 0, 2, 4),
 		TaskStyle: lipgloss.NewStyle().
 			Foreground(lipgloss.Color("#00FFFF")).
 			Margin(1, 0, 0, 3),

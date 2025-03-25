@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/XORbit01/retro/logger"
 	"github.com/XORbit01/retro/shared"
 )
 
@@ -47,6 +48,7 @@ func hashString(s string) string {
 	return hex.EncodeToString(hash[:])
 }
 func (d *Db) AddPlaylist(plname string) error {
+	plname = strings.TrimSpace(plname)
 	hash := hashString(plname) // or UUID or md5(plname)
 
 	_, err := d.db.Exec(
@@ -63,6 +65,9 @@ func (d *Db) RemovePlaylist(name string) error {
 		`DELETE FROM playlist WHERE name = ?`,
 		name,
 	)
+	if err != nil {
+		return err
+	}
 	_, err = d.db.Exec(
 		`DELETE FROM music_playlist WHERE playlist_name = ?`,
 		name,
@@ -77,11 +82,7 @@ func (d *Db) AddMusicToPlaylist(musicName, playlistName string) error {
 		playlistName,
 	)
 	if err != nil && strings.Contains(err.Error(), "UNIQUE constraint failed") {
-		return fmt.Errorf(
-			"music %s already in playlist %s",
-			musicName,
-			playlistName,
-		)
+		return logger.GError("music already in the playlist")
 	}
 	return err
 }

@@ -139,10 +139,10 @@ func (p *Player) RPCPlayListMusicsMeta(
 	plname string,
 	reply *[]shared.MusicMeta,
 ) error {
-	logger.LogInfo("RPCPlayListMusics called with name :", plname)
+	logger.LogInfo("RPCPlayListMusicsMeta called with name :", plname)
 	var err error
 	*reply, err = p.GetPlayListMusicsMeta(plname)
-	logger.LogInfo("RPCPlayListMusics done with reply :", *reply)
+	logger.LogInfo("RPCPlayListMusicsMeta done with reply :", *reply)
 	return err
 }
 

@@ -6,6 +6,7 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/XORbit01/retro/shared"
 	_ "github.com/mattn/go-sqlite3"
@@ -120,7 +121,7 @@ func (d *Db) AddMusic(music *Music) error {
 	// If the name is not used, insert the music with hash
 	_, err = d.db.Exec(
 		`INSERT INTO music (name, source, key, data, hash) VALUES (?, ?, ?, ?, ?)`,
-		music.Name,
+		strings.TrimSpace(music.Name),
 		music.Source,
 		music.Key,
 		music.Data,

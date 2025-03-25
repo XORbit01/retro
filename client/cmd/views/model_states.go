@@ -26,4 +26,5 @@ type SongSelectedMsg struct {
 }
 
 type CallbackFinishedMsg struct {
+	err error
 }

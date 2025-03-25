@@ -2,11 +2,12 @@ package views
 
 import (
 	"fmt"
+	"net/rpc"
+
 	"github.com/XORbit01/retro/shared"
 	"github.com/charmbracelet/bubbles/list"
 	"github.com/charmbracelet/bubbles/spinner"
 	tea "github.com/charmbracelet/bubbletea"
-	"net/rpc"
 )
 
 type searchResultItem struct {
@@ -78,7 +79,7 @@ func (m RootModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		switch msg := msg.(type) {
 		case SearchFinishedMsg:
 			if msg.Err != nil || len(msg.Results) == 0 {
-				m.err = msg.Err // if err is nil but results empty, it's still a no-op
+				m.err = msg.Err
 				m.state = StateQuitting
 				return m, tea.Quit
 			}
@@ -104,8 +105,11 @@ func (m RootModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.processingText = "Processing..."
 				m.state = StateProcessing
 				callback := func() tea.Msg {
-					m.commander.Execute(selected.(searchResultItem).desc, selected.(searchResultItem).ftype, m.client)
-					return CallbackFinishedMsg{}
+					_, err := m.commander.Execute(selected.(searchResultItem).desc, selected.(searchResultItem).ftype, m.client)
+					if err != nil {
+						return CallbackFinishedMsg{err: err}
+					}
+					return CallbackFinishedMsg{err: nil}
 				}
 				return m, tea.Batch(m.searchView.Tick, callback)
 			}
@@ -115,8 +119,12 @@ func (m RootModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case StateProcessing:
 		var cmd tea.Cmd
 		m.searchView, cmd = m.searchView.Update(msg)
-		switch msg.(type) {
+		switch msg := msg.(type) {
 		case CallbackFinishedMsg:
+			if msg.err != nil {
+				m.err = msg.err
+				return m, tea.Quit
+			}
 			m.state = StateQuitting
 			return m, tea.Quit
 		}
@@ -136,12 +144,13 @@ func (m RootModel) View() string {
 		return fmt.Sprintf("%s %s", m.searchView.View(), m.processingText)
 	case StateQuitting:
 		if m.err != nil {
-			return fmt.Sprintf("An error occurred: %v", m.err)
+			return GetTheme().FailStyle.Render(failedEmoji, m.err.Error())
 		}
 		if m.selectedItem != nil && m.commander.QuitMessage() != "" {
 			return GetTheme().QuitTextStyle.Render(m.commander.QuitMessage())
 		}
 		return "Done!"
+
 	default:
 		return "Unknown state"
 	}

@@ -2,10 +2,11 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/XORbit01/retro/client/cmd/views"
 	"os"
 	"strconv"
 	"strings"
+
+	"github.com/XORbit01/retro/client/cmd/views"
 
 	"github.com/spf13/cobra"
 
@@ -289,6 +290,7 @@ If a playlist name is provided, it will list all the songs in that playlist.
 		_ = view.Render(ctx)
 	},
 }
+
 var playlistCreateCmd = &cobra.Command{
 	Use:   "create <playlist name>",
 	Short: "create a new playlist",
@@ -314,7 +316,6 @@ default: $HOME/.retro/playlists
 	},
 }
 
-// remove
 var playlistRemoveCmd = &cobra.Command{
 	Use:   "remove <playlist> | <playlist> <song index>",
 	Short: "remove a playlist (and its songs) | remove a song from a playlist",
@@ -379,7 +380,6 @@ if a song index is provided, it will remove the song from the playlist
 	},
 }
 
-// add song to a playlist
 var playlistAddCmd = &cobra.Command{
 	Use:   "add <listname> <query>",
 	Short: "add music(s) to a playlist",

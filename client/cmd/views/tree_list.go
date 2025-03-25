@@ -17,7 +17,6 @@ type TreeListView struct {
 // Render outputs the styled tree list using the theme from UIContext.
 func (v TreeListView) Render(ctx UIContext) error {
 	// Print title
-	fmt.Println()
 	fmt.Println(ctx.Theme.PositionStyle.Render(fmt.Sprintf("%s %s", v.Emoji, v.Title)))
 	fmt.Println()
 

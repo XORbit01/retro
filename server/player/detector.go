@@ -17,7 +17,6 @@ import (
 
 func (p *Player) CheckWhatIsThis(unknown string) shared.DResults {
 	// check if its a dir or file
-	// TODO: check if its local path
 	if fi, err := os.Stat(unknown); err == nil {
 		if fi.IsDir() {
 			// check if there is music files in the dir
@@ -209,9 +208,9 @@ func (p *Player) GetAvailableMusicOptions(unknown string) []shared.SearchResult 
 			)
 			musicChan <- shared.SearchResult{
 				Title:       m.Name,
-				Destination: m.Key,
+				Destination: m.Hash,
 				Duration:    dur,
-				Type:        "cache",
+				Type:        shared.DCache,
 			}
 		}
 	}()
@@ -330,7 +329,7 @@ func (p *Player) DetectAndAddToPlayList(
 			func(m db.Music) error {
 				return p.Director.Db.AddMusicToPlaylist(
 					m.Name,
-					query.Query,
+					query.PlayListName,
 				)
 			},
 		)
